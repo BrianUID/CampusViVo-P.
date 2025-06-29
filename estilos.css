@@ -1,49 +1,80 @@
+/* Tipografía y fondo general */
 body {
-font-family: 'Roboto', sans-serif;
-background-color: #f4f9f4;
+font-family: 'Poppins', sans-serif;
+background-color: #f0f7f4;
+color: #333;
+margin: 0;
+padding: 0;
 }
 
-h2 {
-color: #2e7d32;
+/* Encabezados */
+h2, h4, .card-title {
+color: #1b4332;
 font-weight: bold;
 }
 
-.navbar-brand {
-font-weight: bold;
-color: #2e7d32 !important;
+/* NAVBAR /
+.navbar {
+background-color: #2d6a4f !important; / Verde elegante */
+border-bottom: 1px solid #1b4332;
 }
 
-.navbar-nav .nav-link {
-font-weight: 500;
-color: #2e7d32 !important;
-}
-
-.navbar-nav .nav-link.active,
-.navbar-nav .nav-link:hover {
-color: #1b5e20 !important;
-}
-
-.card {
-border: 1px solid #c8e6c9;
-border-radius: 8px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.card-title {
-color: #1b5e20;
+.navbar-brand, .nav-link {
+color: #ffffff !important;
 font-weight: 600;
 }
 
-.card-text a {
-color: #2e7d32;
-text-decoration: underline;
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+color: #d0f0e3 !important;
 }
 
+/* CARRUSEL */
+.carousel-item img {
+max-height: 450px;
+object-fit: cover;
+border-radius: 8px;
+}
+
+@media (max-width: 576px) {
+.carousel-item img {
+max-height: 250px;
+}
+}
+
+/* SECCIONES */
+section {
+background-color: #ffffff;
+padding: 60px 20px;
+margin-bottom: 30px;
+border-radius: 12px;
+}
+
+/* CARDS */
+.card {
+border: none;
+border-radius: 12px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.card-body {
+background-color: #ffffff;
+border-radius: 0 0 12px 12px;
+}
+
+.card-title {
+font-weight: 600;
+}
+
+/* BADGES */
 .badge {
-margin: 5px;
+border-radius: 50px;
+padding: 10px 20px;
 font-size: 1rem;
+margin: 5px;
 }
 
+/* BOTONES */
 .btn-success {
 background-color: #43a047;
 border-color: #388e3c;
@@ -64,21 +95,38 @@ background-color: #1565c0;
 border-color: #1565c0;
 }
 
+/* MODAL */
 .modal-content {
 border-radius: 10px;
 }
 
-.carousel-item img {
-max-height: 450px;
-object-fit: cover;
+/* TEXTO CON LINKS */
+.card-text a {
+color: #2e7d32;
+text-decoration: underline;
 }
 
-section h2 {
-margin-bottom: 30px;
+/* PERFIL */
+.perfil-misiones {
+background-color: #f1fdf4;
+border: 2px dashed #a5d6a7;
+padding: 20px;
+border-radius: 10px;
+margin-top: 20px;
 }
 
-@media (max-width: 576px) {
-.carousel-item img {
-max-height: 250px;
+.perfil-misiones h5 {
+color: #1b4332;
+font-weight: 600;
+margin-bottom: 15px;
 }
+
+.perfil-misiones ul {
+list-style-type: '🌿 ';
+padding-left: 20px;
+}
+
+.perfil-misiones ul li {
+margin-bottom: 8px;
+font-weight: 500;
 }
