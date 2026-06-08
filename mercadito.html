@@ -15,6 +15,11 @@
     .precio-puntos { background: #ffd700; color: #333; padding: 5px 10px; border-radius: 20px; font-weight: bold; }
     .filtro-btn { margin: 5px; padding: 8px 20px; border-radius: 25px; transition: all 0.3s; }
     .filtro-btn.active { background: #2d6a4f; color: white; }
+    .reward-card { transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+    .reward-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .reward-card .card-body { text-align: center; }
+    .btn-reward { background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; color: #333; font-weight: bold; }
+    .btn-reward:hover { background: linear-gradient(135deg, #ffc107, #ff7b00); color: #333; }
   </style>
 </head>
 <body>
@@ -59,6 +64,69 @@
 
   <!-- Productos Grid -->
   <div class="row g-4" id="productosGrid"></div>
+
+  <!-- TIENDA DE RECOMPENSAS -->
+  <div class="mt-5 pt-4">
+    <h3 class="text-center mb-4"><i class="fas fa-gift text-warning"></i> Canjea tus puntos por recompensas físicas</h3>
+    <p class="text-center text-muted mb-4">Acumula puntos participando en actividades sostenibles y cánjealos en el lounge universitario</p>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="card reward-card h-100">
+          <div class="card-body">
+            <i class="fas fa-mug-hot fa-4x text-warning mb-3"></i>
+            <h5>Taza CampusVivo</h5>
+            <p class="text-muted">Cerámica ecológica con diseño exclusivo</p>
+            <p><span class="badge bg-warning text-dark">⭐ 300 puntos</span></p>
+            <button class="btn btn-reward w-100" onclick="canjearRecompensa('Taza CampusVivo', 300)">Canjear</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card reward-card h-100">
+          <div class="card-body">
+            <i class="fas fa-tshirt fa-4x text-success mb-3"></i>
+            <h5>Polo Ecológico</h5>
+            <p class="text-muted">Algodón orgánico 100% libre de químicos</p>
+            <p><span class="badge bg-warning text-dark">⭐ 500 puntos</span></p>
+            <button class="btn btn-reward w-100" onclick="canjearRecompensa('Polo Ecológico', 500)">Canjear</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card reward-card h-100">
+          <div class="card-body">
+            <i class="fas fa-solid fa-bottle-water fa-4x text-info mb-3"></i>
+            <h5>Botella Reutilizable</h5>
+            <p class="text-muted">Acero inoxidable, libre de plástico y químicos</p>
+            <p><span class="badge bg-warning text-dark">⭐ 200 puntos</span></p>
+            <button class="btn btn-reward w-100" onclick="canjearRecompensa('Botella Reutilizable', 200)">Canjear</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card reward-card h-100">
+          <div class="card-body">
+            <i class="fas fa-tree fa-4x text-success mb-3"></i>
+            <h5>Planta Nativa</h5>
+            <p class="text-muted">Especie andina en maceta reciclada</p>
+            <p><span class="badge bg-warning text-dark">⭐ 150 puntos</span></p>
+            <button class="btn btn-reward w-100" onclick="canjearRecompensa('Planta Nativa', 150)">Canjear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4 offset-md-4">
+        <div class="card bg-light text-center">
+          <div class="card-body">
+            <i class="fas fa-location-dot text-danger"></i>
+            <p class="mb-0"><strong>Punto de recogida:</strong> Lounge Estudiantil - Azotea del Bloque B</p>
+            <small class="text-muted"><strong>Horario:</strong> Lunes a Viernes 9am - 5pm</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
@@ -114,12 +182,67 @@
           localStorage.setItem('puntosUsuario', puntosUsuario);
           document.getElementById('puntosHeader').innerHTML = `⭐ ${puntosUsuario} pts`;
           Swal.fire('¡Canjeado!', `Disfruta de ${p.nombre}. Te quedan ${puntosUsuario} puntos`, 'success');
+          // Actualizar también el contador de compras para el logro "Apoyo Local"
+          let compras = localStorage.getItem('comprasMercadito') ? parseInt(localStorage.getItem('comprasMercadito')) : 0;
+          compras++;
+          localStorage.setItem('comprasMercadito', compras);
+          lanzarConfetti();
         } else {
           Swal.fire('Sin puntos', `Te faltan ${p.precioPuntos - puntosUsuario} puntos. Completa misiones en el campus`, 'error');
         }
       }
     });
   }
+
+  function canjearRecompensa(recompensa, costo) {
+    let puntos = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+    if(puntos >= costo) {
+      puntos -= costo;
+      localStorage.setItem('puntosUsuario', puntos);
+      puntosUsuario = puntos;
+      document.getElementById('puntosHeader').innerHTML = `⭐ ${puntosUsuario} pts`;
+      Swal.fire({
+        title: '🎁 ¡Canje exitoso!',
+        text: `Canjeaste ${recompensa}. Pásate por el lounge (2do piso) a recogerlo.`,
+        icon: 'success',
+        confirmButtonColor: '#2d6a4f'
+      });
+      lanzarConfetti();
+    } else {
+      Swal.fire({
+        title: '❌ Sin puntos suficientes',
+        text: `Te faltan ${costo - puntos} puntos. ¡Completa más misiones sostenibles!`,
+        icon: 'error',
+        confirmButtonColor: '#dc3545'
+      });
+    }
+  }
+
+  function lanzarConfetti() {
+    // Confetti simple
+    const duration = 2000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+    
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+    
+    const interval = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+      const particleCount = 50 * (timeLeft / duration);
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+    }, 250);
+  }
+
+  // Cargar librería de confetti
+  const scriptConfetti = document.createElement('script');
+  scriptConfetti.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1';
+  document.head.appendChild(scriptConfetti);
 
   document.getElementById('buscador').addEventListener('input', e => {
     const cat = document.querySelector('.filtro-btn.active').dataset.categoria;
@@ -135,6 +258,12 @@
   });
   
   mostrarProductos();
+
+  // Función para actualizar header (global)
+  function actualizarPuntosHeader() {
+    puntosUsuario = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+    document.getElementById('puntosHeader').innerHTML = `⭐ ${puntosUsuario} pts`;
+  }
 </script>
 </body>
 </html>

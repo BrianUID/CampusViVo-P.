@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Vivo - CampusVivo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .chat-container { height: 500px; overflow-y: auto; background: #f8f9fa; border-radius: 15px; padding: 20px; }
+    .mensaje-propio { background: linear-gradient(135deg, #2d6a4f, #43a047); color: white; border-radius: 15px 15px 5px 15px; padding: 10px; margin: 10px 0; text-align: right; }
+    .mensaje-otro { background: #e9ecef; border-radius: 15px 15px 15px 5px; padding: 10px; margin: 10px 0; }
+    .chat-input { position: sticky; bottom: 0; background: white; padding: 15px; border-radius: 15px; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-success">
+  <div class="container">
+    <a class="navbar-brand" href="index.html"><i class="fas fa-comments"></i> Chat Vivo - CampusVivo</a>
+    <span id="usuariosOnline" class="badge bg-light text-success">🟢 0 online</span>
+  </div>
+</nav>
+
+<div class="container py-4">
+  <div class="chat-container" id="chatContainer">
+    <div class="text-center text-muted">💬 ¡Conecta con otros estudiantes!</div>
+  </div>
+  
+  <div class="chat-input mt-3">
+    <div class="input-group">
+      <input type="text" id="mensajeInput" class="form-control" placeholder="Escribe tu mensaje...">
+      <button class="btn btn-success" onclick="enviarMensaje()"><i class="fas fa-paper-plane"></i> Enviar</button>
+    </div>
+    <small class="text-muted">+5 puntos por cada mensaje (máx 50 puntos/día)</small>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  let mensajes = JSON.parse(localStorage.getItem('chatMensajes')) || [];
+  let mensajesHoy = parseInt(localStorage.getItem('mensajesHoy')) || 0;
+  const usuario = localStorage.getItem('usuario') || 'Anónimo';
+  
+  function cargarMensajes() {
+    const container = document.getElementById('chatContainer');
+    container.innerHTML = mensajes.map(msg => `
+      <div class="${msg.usuario === usuario ? 'mensaje-propio' : 'mensaje-otro'}">
+        <strong>${msg.usuario}</strong><br>
+        ${msg.texto}<br>
+        <small class="text-muted">${msg.hora}</small>
+      </div>
+    `).join('');
+    container.scrollTop = container.scrollHeight;
+  }
+  
+  function enviarMensaje() {
+    const input = document.getElementById('mensajeInput');
+    const texto = input.value.trim();
+    if(!texto) return;
+    
+    if(mensajesHoy >= 10) {
+      Swal.fire('Límite alcanzado', 'Solo puedes enviar 10 mensajes por día', 'warning');
+      return;
+    }
+    
+    const nuevoMensaje = {
+      usuario: usuario,
+      texto: texto,
+      hora: new Date().toLocaleTimeString()
+    };
+    
+    mensajes.push(nuevoMensaje);
+    mensajesHoy++;
+    localStorage.setItem('chatMensajes', JSON.stringify(mensajes));
+    localStorage.setItem('mensajesHoy', mensajesHoy);
+    
+    // Dar puntos por mensaje
+    let puntos = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+    puntos += 5;
+    localStorage.setItem('puntosUsuario', puntos);
+    
+    input.value = '';
+    cargarMensajes();
+    actualizarPuntosHeader();
+    
+    // Reset diario
+    const hoy = new Date().toDateString();
+    if(localStorage.getItem('diaChat') !== hoy) {
+      localStorage.setItem('mensajesHoy', '0');
+      localStorage.setItem('diaChat', hoy);
+      mensajesHoy = 0;
+    }
+  }
+  
+  function actualizarPuntosHeader() {
+    const puntos = localStorage.getItem('puntosUsuario');
+    const headerPuntos = document.getElementById('puntosHeader');
+    if(headerPuntos) headerPuntos.innerHTML = `⭐ ${puntos} pts`;
+  }
+  
+  cargarMensajes();
+  
+  // Simular usuarios online
+  let online = Math.floor(Math.random() * 15) + 5;
+  document.getElementById('usuariosOnline').innerHTML = `🟢 ${online} online`;
+  setInterval(() => {
+    online = Math.floor(Math.random() * 15) + 5;
+    document.getElementById('usuariosOnline').innerHTML = `🟢 ${online} online`;
+  }, 10000);
+</script>
+</body>
+</html>

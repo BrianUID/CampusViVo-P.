@@ -48,6 +48,7 @@
         <li class="nav-item"><a class="nav-link" href="#zona-smart">🛡️ Zona Smart</a></li>
         <li class="nav-item"><a class="nav-link" href="bienestar.html">🧠 Bienestar</a></li>
         <li class="nav-item"><a class="nav-link" href="ranking.html">🏆 Ranking</a></li>
+        <li class="nav-item"><a class="nav-link" href="chat.html">💬 Chat Vivo</a></li>
         <li class="nav-item"><a class="nav-link" href="equipo.html">👥 Equipo</a></li>
       </ul>
       <span class="badge bg-success ms-3" id="puntosHeader">⭐ 0 pts</span>
@@ -213,6 +214,58 @@
   </div>
 </section>
 
+<!-- CALENDARIO DE EVENTOS -->
+<section class="container py-5" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-radius: 20px;">
+  <h2 class="text-center mb-4"><i class="fas fa-calendar-alt"></i> Próximos Eventos Sostenibles</h2>
+  <div class="row g-4" id="eventosContainer">
+    <!-- Eventos se cargarán con JS -->
+  </div>
+</section>
+
+<script>
+  const eventos = [
+    { fecha: '15 Jun 2026', titulo: '🌱 Plantación de árboles', lugar: 'Jardín Central', puntos: 50, hora: '10:00 AM' },
+    { fecha: '22 Jun 2026', titulo: '♻️ Taller de reciclaje creativo', lugar: 'FabLab', puntos: 40, hora: '3:00 PM' },
+    { fecha: '29 Jun 2026', titulo: '🚲 Día sin auto', lugar: 'Todo el campus', puntos: 60, hora: 'Todo el día' },
+    { fecha: '06 Jul 2026', titulo: '🍫 Feria de emprendedores', lugar: 'Hall principal', puntos: 30, hora: '9:00 AM - 5:00 PM' }
+  ];
+  
+  function cargarEventos() {
+    const container = document.getElementById('eventosContainer');
+    if(!container) return;
+    
+    container.innerHTML = eventos.map(evento => `
+      <div class="col-md-3">
+        <div class="card h-100 evento-card" style="cursor: pointer;" onclick="apuntarseEvento('${evento.titulo}', ${evento.puntos})">
+          <div class="card-body text-center">
+            <div class="badge bg-success mb-2">📅 ${evento.fecha}</div>
+            <h5>${evento.titulo}</h5>
+            <p><i class="fas fa-map-marker-alt"></i> ${evento.lugar}</p>
+            <p><i class="fas fa-clock"></i> ${evento.hora}</p>
+            <span class="badge bg-warning">+${evento.puntos} puntos</span>
+            <button class="btn btn-sm btn-success mt-2 w-100">Apuntarse</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  function apuntarseEvento(titulo, puntos) {
+    let puntosActuales = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+    puntosActuales += puntos;
+    localStorage.setItem('puntosUsuario', puntosActuales);
+    Swal.fire({
+      title: '✅ ¡Te has apuntado!',
+      text: `Ganarás ${puntos} puntos por asistir a: ${titulo}`,
+      icon: 'success',
+      confirmButtonColor: '#2d6a4f'
+    });
+    actualizarPuntosHeader();
+  }
+  
+  cargarEventos();
+</script>
+
 <!-- Perfil -->
 <section class="container py-5" id="perfil">
   <h2 class="mb-4 text-center">Mi perfil sostenible</h2>
@@ -245,6 +298,48 @@
       <p class="text-muted">Sigue participando en iniciativas sostenibles para desbloquear más insignias 🌟</p>
     </div>
   </div>
+  <div class="text-center mt-4">
+  <button class="btn btn-outline-success" onclick="generarQRPerfil()">
+    <i class="fas fa-qrcode"></i> Compartir mi perfil
+  </button>
+</div>
+
+<script>
+  function generarQRPerfil() {
+    const usuario = localStorage.getItem('usuario') || 'Estudiante';
+    const puntos = localStorage.getItem('puntosUsuario') || 100;
+    const perfilURL = `${window.location.origin}${window.location.pathname}?user=${encodeURIComponent(usuario)}`;
+    
+    Swal.fire({
+      title: '📱 Mi perfil CampusVivo',
+      html: `
+        <div class="text-center">
+          <p><strong>${usuario}</strong></p>
+          <p>⭐ ${puntos} puntos</p>
+          <div id="qrCode"></div>
+          <button class="btn btn-sm btn-success mt-3" onclick="copiarPerfil()">📋 Copiar enlace</button>
+        </div>
+      `,
+      didOpen: () => {
+        const qrDiv = document.getElementById('qrCode');
+        if(qrDiv && typeof QRCode !== 'undefined') {
+          new QRCode(qrDiv, { text: perfilURL, width: 150, height: 150 });
+        } else {
+          qrDiv.innerHTML = '<p>🔗 Enlace generado</p>';
+        }
+      }
+    });
+  }
+  
+  function copiarPerfil() {
+    const enlace = window.location.href;
+    navigator.clipboard.writeText(enlace);
+    Swal.fire('Copiado', 'Enlace copiado al portapapeles', 'success');
+  }
+</script>
+
+<!-- Cargar librería QR -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <!-- Misiones sostenibles -->
   <div class="mt-5">
@@ -265,6 +360,76 @@
     </div>
   </div>
 </section>
+
+<!-- MISIONES DIARIAS -->
+<section class="container py-5 bg-light rounded-4 mb-4">
+  <h2 class="text-center mb-4"><i class="fas fa-tasks"></i> Misiones Diarias</h2>
+  <div class="row g-4" id="misionesDiarias">
+    <!-- Se cargan con JS -->
+  </div>
+</section>
+
+<script>
+  const misionesDiarias = [
+    { id: 1, texto: "Comparte una publicación sobre sostenibilidad", puntos: 20, icono: "📱" },
+    { id: 2, texto: "Usa transporte sostenible para llegar al campus", puntos: 30, icono: "🚲" },
+    { id: 3, texto: "Recoge 3 residuos plásticos dentro de la universidad", puntos: 15, icono: "♻️" },
+    { id: 4, texto: "Invita a un amigo a unirse a CampusVivo", puntos: 40, icono: "👥" }
+  ];
+  
+  function cargarMisionesDiarias() {
+    const container = document.getElementById('misionesDiarias');
+    if(!container) return;
+    
+    container.innerHTML = misionesDiarias.map(mision => `
+      <div class="col-md-3">
+        <div class="card text-center h-100">
+          <div class="card-body">
+            <div class="display-4">${mision.icono}</div>
+            <p class="mt-2">${mision.texto}</p>
+            <span class="badge bg-warning">+${mision.puntos} puntos</span>
+            <button class="btn btn-sm btn-outline-success mt-2 w-100" onclick="completarMisionDiaria(${mision.id}, ${mision.puntos})">
+              ✓ Completar
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  function completarMisionDiaria(id, puntos) {
+    let completadas = JSON.parse(localStorage.getItem('misionesCompletadas')) || [];
+    if(completadas.includes(id)) {
+      Swal.fire('Ya completada', 'Esta misión ya la realizaste hoy', 'info');
+      return;
+    }
+    
+    completadas.push(id);
+    localStorage.setItem('misionesCompletadas', JSON.stringify(completadas));
+    
+    let puntosActuales = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+    puntosActuales += puntos;
+    localStorage.setItem('puntosUsuario', puntosActuales);
+    
+    Swal.fire({
+      title: '🎉 ¡Misión completada!',
+      text: `Ganaste ${puntos} puntos`,
+      icon: 'success',
+      timer: 1500,
+      showConfirmButton: false
+    });
+    actualizarPuntosHeader();
+    
+    // Reset diario
+    const hoy = new Date().toDateString();
+    if(localStorage.getItem('diaMisiones') !== hoy) {
+      localStorage.setItem('misionesCompletadas', '[]');
+      localStorage.setItem('diaMisiones', hoy);
+    }
+  }
+  
+  cargarMisionesDiarias();
+</script>
 
 <!-- Modal sugerencia -->
 <section class="container py-5" id="sugerencia">

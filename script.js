@@ -272,3 +272,146 @@ function checkMisionesYNotificar() {
   }
 }
 setInterval(checkMisionesYNotificar, 1000);
+
+// ========== PANEL ADMIN SECRETO ==========
+// Presiona "A" + "D" + "M" + "I" + "N" para abrir
+let adminCode = [];
+const adminPassword = ['a', 'd', 'm', 'i', 'n'];
+
+document.addEventListener('keydown', (e) => {
+  adminCode.push(e.key.toLowerCase());
+  if(adminCode.length > 5) adminCode.shift();
+  
+  if(JSON.stringify(adminCode) === JSON.stringify(adminPassword)) {
+    abrirPanelAdmin();
+  }
+});
+
+function abrirPanelAdmin() {
+  Swal.fire({
+    title: '🔐 Panel de Administración',
+    html: `
+      <div class="text-start">
+        <div class="mb-3">
+          <label>📊 Resetear puntos globales</label>
+          <button class="btn btn-danger w-100 mt-1" onclick="resetearPuntosGlobales()">Resetear todos los puntos</button>
+        </div>
+        <div class="mb-3">
+          <label>📈 Simular nuevo usuario</label>
+          <button class="btn btn-primary w-100 mt-1" onclick="simularUsuarioNuevo()">+ Simular</button>
+        </div>
+        <div class="mb-3">
+          <label>🎁 Dar puntos a todos</label>
+          <button class="btn btn-success w-100 mt-1" onclick="darPuntosATodos()">+100 puntos a TODOS</button>
+        </div>
+        <div class="mb-3">
+          <label>📢 Enviar notificación masiva</label>
+          <input id="msgMasivo" class="form-control" placeholder="Mensaje para todos">
+          <button class="btn btn-info w-100 mt-1" onclick="enviarNotificacionMasiva()">Enviar</button>
+        </div>
+      </div>
+    `,
+    width: '500px',
+    showConfirmButton: false,
+    showCloseButton: true
+  });
+}
+
+function resetearPuntosGlobales() {
+  localStorage.setItem('puntosUsuario', '100');
+  Swal.fire('Reset completo', 'Todos los puntos vuelven a 100', 'success');
+  location.reload();
+}
+
+function simularUsuarioNuevo() {
+  const nombres = ['Juan Pérez', 'Laura Gómez', 'Diego Luna', 'Camila Ríos'];
+  const nombreRand = nombres[Math.floor(Math.random() * nombres.length)];
+  localStorage.setItem('usuario', nombreRand);
+  localStorage.setItem('puntosUsuario', '150');
+  Swal.fire('Usuario simulado', `Ahora eres ${nombreRand} con 150 puntos`, 'success');
+  location.reload();
+}
+
+function darPuntosATodos() {
+  let puntos = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+  puntos += 100;
+  localStorage.setItem('puntosUsuario', puntos);
+  Swal.fire('¡Regalo!', 'Has recibido 100 puntos extras', 'success');
+  actualizarPuntosHeader();
+}
+
+function enviarNotificacionMasiva() {
+  const msg = document.getElementById('msgMasivo')?.value || '¡Nueva actividad en CampusVivo!';
+  mostrarNotificacionGlobal(msg);
+  Swal.fire('Enviado', 'Notificación enviada a todos los usuarios', 'success');
+}
+
+function mostrarNotificacionGlobal(mensaje) {
+  const notif = document.createElement('div');
+  notif.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    z-index: 10001;
+    animation: slideDown 0.5s ease;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  `;
+  notif.innerHTML = `📢 ${mensaje}`;
+  document.body.appendChild(notif);
+  setTimeout(() => notif.remove(), 4000);
+}
+
+const slideDownStyle = document.createElement('style');
+slideDownStyle.textContent = `
+  @keyframes slideDown {
+    from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+  }
+`;
+document.head.appendChild(slideDownStyle);
+
+// ========== CONFETTI EFFECT ==========
+function lanzarConfetti() {
+  const duration = 3 * 1000;
+  const animationEnd = Date.now() + duration;
+  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
+  
+  function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+  
+  const interval = setInterval(function() {
+    const timeLeft = animationEnd - Date.now();
+    if (timeLeft <= 0) return clearInterval(interval);
+    const particleCount = 50 * (timeLeft / duration);
+    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 } }));
+  }, 250);
+}
+
+// Llamar cuando se completa misión especial
+function checkLogroEspecial() {
+  const puntos = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+  if(puntos >= 500 && !localStorage.getItem('logro500')) {
+    lanzarConfetti();
+    Swal.fire({
+      title: '🏆 ¡LOGRO ÉPICO!',
+      text: 'Alcanzaste 500 puntos - Eres un Guardian del Campus',
+      icon: 'success',
+      background: 'linear-gradient(135deg, #ffd700, #ffed4e)'
+    });
+    localStorage.setItem('logro500', 'true');
+  }
+}
+
+// Llamar cada vez que se suman puntos
+const originalSumarPuntos = window.sumarPuntos;
+window.sumarPuntos = function(cantidad) {
+  if(originalSumarPuntos) originalSumarPuntos(cantidad);
+  checkLogroEspecial();
+};
