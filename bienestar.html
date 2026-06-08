@@ -3,22 +3,152 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bienestar - CampusVivo</title>
+  <title>Bienestar Integral - CampusVivo</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="estilos.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
-    .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 20px; padding: 30px; margin-bottom: 20px; }
-    .stat-number { font-size: 3rem; font-weight: bold; }
-    .pulsera-badge { padding: 10px 20px; border-radius: 50px; color: white; font-weight: bold; margin: 5px; display: inline-block; }
-    .logro-card { transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
-    .logro-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-    .logro-card.border-success { border: 2px solid #28a745 !important; background: linear-gradient(135deg, #f8fff8, #e8f5e9); }
+    /* Animaciones y estilos premium */
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 5px rgba(46, 125, 50, 0.5); }
+      50% { box-shadow: 0 0 25px rgba(46, 125, 50, 0.8); }
+    }
+    
+    @keyframes slideInLeft {
+      from { transform: translateX(-50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideInRight {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .stat-card-premium {
+      background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      transition: all 0.3s;
+      cursor: pointer;
+      animation: pulseGlow 2s infinite;
+    }
+    
+    .stat-card-premium:hover {
+      transform: translateY(-10px) scale(1.02);
+    }
+    
+    .stat-number-animated {
+      font-size: 3.5rem;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    
+    .meditacion-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      padding: 20px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .meditacion-card:hover {
+      transform: scale(1.05);
+    }
+    
+    .testimonio-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+    
+    .testimonio-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    
+    .wellness-tip {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-left: 4px solid #2d6a4f;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .wellness-tip:hover {
+      transform: translateX(5px);
+      background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    }
+    
+    .cita-motivacional {
+      font-size: 1.2rem;
+      font-style: italic;
+      background: linear-gradient(135deg, #ffe6d5 0%, #ffd4b3 100%);
+      padding: 25px;
+      border-radius: 20px;
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .recurso-card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .recurso-card:hover {
+      transform: translateY(-5px);
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    }
+    
+    .rutina-dia {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transition: all 0.3s;
+    }
+    
+    .rutina-dia:hover {
+      background: #e9ecef;
+      transform: translateX(5px);
+    }
+    
+    .badge-salud {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      padding: 8px 15px;
+      border-radius: 50px;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .modal-wellness {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
   </style>
 </head>
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
   <div class="container">
     <a class="navbar-brand" href="index.html">🌿 CampusVivo</a>
@@ -38,311 +168,483 @@
 </nav>
 
 <div class="container py-5">
+  
+  <!-- HEADER CON CITA MOTIVACIONAL -->
   <div class="text-center mb-5">
-    <h1 class="display-4"><i class="fas fa-heartbeat text-danger"></i> Bienestar Universitario</h1>
-    <p class="lead">Datos que respaldan nuestra misión y acciones concretas</p>
+    <h1 class="display-4"><i class="fas fa-heartbeat text-danger"></i> Bienestar Integral</h1>
+    <p class="lead">Tu salud mental y física es nuestra prioridad</p>
+    <div class="cita-motivacional" id="citaMotivacional">
+      <i class="fas fa-quote-left me-2"></i>
+      <span id="citaTexto">"El bienestar no es un destino, es un viaje diario"</span>
+      <i class="fas fa-quote-right ms-2"></i>
+    </div>
   </div>
 
+  <!-- ESTADÍSTICAS MEJORADAS CON ANIMACIÓN -->
   <div class="row mb-5">
-    <div class="col-md-4">
-      <div class="stat-card text-center">
+    <div class="col-md-3">
+      <div class="stat-card-premium text-center" onclick="mostrarDetalle('estres')">
         <i class="fas fa-chart-line fa-3x mb-3"></i>
-        <div class="stat-number">80%</div>
+        <div class="stat-number-animated" data-target="80">0%</div>
         <p>de estudiantes reportan estrés severo</p>
-        <small>Encuesta aplicada a 500 alumnos (2025)</small>
+        <small class="text-light">⬅️ Click para más info</small>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="stat-card text-center" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+    <div class="col-md-3">
+      <div class="stat-card-premium text-center" style="background: linear-gradient(135deg, #c0392b, #e74c3c);" onclick="mostrarDetalle('concentracion')">
         <i class="fas fa-brain fa-3x mb-3"></i>
-        <div class="stat-number">91%</div>
-        <p>pérdida de concentración por factores externos</p>
+        <div class="stat-number-animated" data-target="91">0%</div>
+        <p>pérdida de concentración</p>
+        <small class="text-light">⬅️ Click para más info</small>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="stat-card text-center" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+    <div class="col-md-3">
+      <div class="stat-card-premium text-center" style="background: linear-gradient(135deg, #2980b9, #3498db);" onclick="mostrarDetalle('apuestas')">
         <i class="fas fa-dice-d6 fa-3x mb-3"></i>
-        <div class="stat-number">40%</div>
-        <p>han estado atrapados en apuestas virtuales</p>
+        <div class="stat-number-animated" data-target="40">0%</div>
+        <p>en riesgo por apuestas virtuales</p>
+        <small class="text-light">⬅️ Click para más info</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card-premium text-center" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);" onclick="mostrarDetalle('ansiedad')">
+        <i class="fas fa-heartbeat fa-3x mb-3"></i>
+        <div class="stat-number-animated" data-target="73">0%</div>
+        <p>sufren de ansiedad moderada</p>
+        <small class="text-light">⬅️ Click para más info</small>
       </div>
     </div>
   </div>
 
+  <!-- GRÁFICOS INTERACTIVOS -->
   <div class="row mb-5">
     <div class="col-lg-6">
-      <canvas id="estresChart" style="max-height: 300px;"></canvas>
+      <div class="card shadow">
+        <div class="card-header bg-success text-white">
+          <h4><i class="fas fa-chart-pie"></i> Causas del Estrés Académico</h4>
+        </div>
+        <div class="card-body">
+          <canvas id="causasEstresChart" style="max-height: 300px;"></canvas>
+        </div>
+      </div>
     </div>
     <div class="col-lg-6">
-      <canvas id="apuestasChart" style="max-height: 300px;"></canvas>
+      <div class="card shadow">
+        <div class="card-header bg-info text-white">
+          <h4><i class="fas fa-chart-line"></i> Evolución del Bienestar (2024-2026)</h4>
+        </div>
+        <div class="card-body">
+          <canvas id="evolucionBienestarChart" style="max-height: 300px;"></canvas>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- TEST DE ESTRÉS INTERACTIVO -->
   <div class="card shadow-lg mb-5">
+    <div class="card-header bg-warning text-dark">
+      <h3><i class="fas fa-clipboard-list"></i> Test Rápido de Estrés</h3>
+    </div>
     <div class="card-body">
-      <h3><i class="fas fa-hand-peace"></i> Código de Pulseras por Facultad</h3>
-      <p class="mt-3">Sistema de identificación visual que fomenta la socialización y reduce el aislamiento:</p>
-      <div>
-        <span class="pulsera-badge" style="background: #FF6B6B;">🔴 Derecho</span>
-        <span class="pulsera-badge" style="background: #4ECDC4;">🔵 Ingenierías</span>
-        <span class="pulsera-badge" style="background: #FFE66D; color:#333;">🟡 Negocios</span>
-        <span class="pulsera-badge" style="background: #95E77E;">🟢 Salud</span>
-        <span class="pulsera-badge" style="background: #A78BFA;">🟣 Humanidades</span>
-      </div>
-      <button class="btn btn-primary mt-3" onclick="simularPulsera()">Simular conexión con pulsera ➕10 puntos</button>
+      <p>Responde estas 5 preguntas para conocer tu nivel de estrés:</p>
+      <div id="testPreguntas"></div>
+      <button class="btn btn-primary mt-3" onclick="calcularNivelEstres()">🔍 Calcular mi nivel</button>
+      <div id="resultadoTest" class="mt-3" style="display: none;"></div>
     </div>
   </div>
 
-  <div class="alert alert-success">
-    <i class="fas fa-chalkboard-user"></i> <strong>Acción tomada:</strong> Se han implementado 12 "Mesas de Carrera" en zonas comunes, logrando un 35% de aumento en interacción entre estudiantes de diferentes facultades.
-  </div>
-
-  <!-- Sección de Logros Especiales -->
-  <div class="row mt-5">
-    <div class="col-12">
-      <h3 class="text-center mb-4"><i class="fas fa-trophy text-warning"></i> Logros Especiales</h3>
-      <div class="row g-4" id="logros-container">
-        <div class="col-md-3">
-          <div class="card text-center logro-card" data-logro="eco">
-            <div class="card-body">
-              <i class="fas fa-leaf fa-3x text-success"></i>
-              <h6 class="mt-2">Eco Amigable</h6>
-              <small>Completa 5 misiones verdes</small>
-              <div class="progress mt-2" style="height: 8px;">
-                <div class="progress-bar bg-success" style="width: 0%"></div>
-              </div>
-              <small class="text-muted" id="eco-contador">0/5</small>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card text-center logro-card" data-logro="social">
-            <div class="card-body">
-              <i class="fas fa-users fa-3x text-primary"></i>
-              <h6 class="mt-2">Socializador</h6>
-              <small>Conecta con 10 personas diferentes</small>
-              <div class="progress mt-2" style="height: 8px;">
-                <div class="progress-bar bg-primary" style="width: 0%"></div>
-              </div>
-              <small class="text-muted" id="social-contador">0/10</small>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card text-center logro-card" data-logro="emprendedor">
-            <div class="card-body">
-              <i class="fas fa-chart-line fa-3x text-warning"></i>
-              <h6 class="mt-2">Apoyo Local</h6>
-              <small>Realiza 3 compras en el mercadito</small>
-              <div class="progress mt-2" style="height: 8px;">
-                <div class="progress-bar bg-warning" style="width: 0%"></div>
-              </div>
-              <small class="text-muted" id="emprendedor-contador">0/3</small>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card text-center logro-card" data-logro="tecnologico">
-            <div class="card-body">
-              <i class="fas fa-microchip fa-3x text-info"></i>
-              <h6 class="mt-2">Tech Saver</h6>
-              <small>Usa el Router IoT por 30 días</small>
-              <div class="progress mt-2" style="height: 8px;">
-                <div class="progress-bar bg-info" style="width: 0%"></div>
-              </div>
-              <small class="text-muted" id="tecnologico-contador">0/30</small>
-            </div>
-          </div>
-        </div>
+  <!-- MEDITACIONES GUIADAS -->
+  <h3 class="text-center mb-4"><i class="fas fa-spa"></i> Meditaciones Guiadas</h3>
+  <div class="row mb-5">
+    <div class="col-md-4">
+      <div class="meditacion-card" onclick="reproducirMeditacion('ansiedad')">
+        <i class="fas fa-cloud-moon fa-3x mb-3"></i>
+        <h5>🌙 Para la Ansiedad</h5>
+        <p>5 minutos - Respiración profunda</p>
+        <audio id="audioAnsiedad" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="meditacion-card" style="background: linear-gradient(135deg, #11998e, #38ef7d);" onclick="reproducirMeditacion('concentracion')">
+        <i class="fas fa-brain fa-3x mb-3"></i>
+        <h5>🧠 Para la Concentración</h5>
+        <p>10 minutos - Enfoque total</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="meditacion-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);" onclick="reproducirMeditacion('sleep')">
+        <i class="fas fa-bed fa-3x mb-3"></i>
+        <h5>😴 Para Dormir Mejor</h5>
+        <p>15 minutos - Relajación profunda</p>
       </div>
     </div>
   </div>
 
-  <!-- Botón para simular conexión social -->
-  <div class="text-center mt-4">
-    <button class="btn btn-outline-primary" onclick="simularConexionSocial()">
-      <i class="fas fa-handshake"></i> Simular nueva conexión social
-    </button>
-    <button class="btn btn-outline-warning ms-2" onclick="simularCompraMercadito()">
-      <i class="fas fa-shopping-bag"></i> Simular compra en mercadito
-    </button>
-    <button class="btn btn-outline-info ms-2" onclick="simularUsoRouter()">
-      <i class="fas fa-wifi"></i> Simular día usando Router IoT
-    </button>
+  <!-- TESTIMONIOS REALES -->
+  <h3 class="text-center mb-4"><i class="fas fa-comments"></i> Testimonios de Estudiantes</h3>
+  <div class="row mb-5">
+    <div class="col-md-4">
+      <div class="testimonio-card">
+        <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+        <p class="mt-2">"Las mesas de carrera me ayudaron a hacer amigos. Ya no me siento solo en la universidad"</p>
+        <strong>- Carlos, Ingeniería</strong>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="testimonio-card">
+        <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+        <p class="mt-2">"El router IoT bloqueó acceso a casas de apuestas. Ahora me concentro más en mis estudios"</p>
+        <strong>- Andrea, Derecho</strong>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="testimonio-card">
+        <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+        <p class="mt-2">"Las meditaciones guiadas redujeron mi estrés en un 70%. ¡Las recomiendo!"</p>
+        <strong>- Mariela, Psicología</strong>
+      </div>
+    </div>
   </div>
+
+  <!-- CONSEJOS DE BIENESTAR -->
+  <h3 class="text-center mb-4"><i class="fas fa-lightbulb"></i> Tips para tu Bienestar</h3>
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <div class="wellness-tip" onclick="aplicarTip(1)">
+        <i class="fas fa-bed text-primary"></i>
+        <strong>Tip #1:</strong> Duerme 7-8 horas diarias. El descanso mejora tu memoria y concentración.
+      </div>
+      <div class="wellness-tip" onclick="aplicarTip(2)">
+        <i class="fas fa-apple-alt text-success"></i>
+        <strong>Tip #2:</strong> Toma agua cada 2 horas. La hidratación reduce la fatiga mental.
+      </div>
+      <div class="wellness-tip" onclick="aplicarTip(3)">
+        <i class="fas fa-dumbbell text-warning"></i>
+        <strong>Tip #3:</strong> Haz pausas activas cada 45 minutos. Muévete 5 minutos.
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="wellness-tip" onclick="aplicarTip(4)">
+        <i class="fas fa-music text-info"></i>
+        <strong>Tip #4:</strong> Escucha música relajante mientras estudias. Mejora el enfoque.
+      </div>
+      <div class="wellness-tip" onclick="aplicarTip(5)">
+        <i class="fas fa-hand-sparkles text-danger"></i>
+        <strong>Tip #5:</strong> Practica gratitud: escribe 3 cosas buenas que te pasaron hoy.
+      </div>
+      <div class="wellness-tip" onclick="aplicarTip(6)">
+        <i class="fas fa-users text-secondary"></i>
+        <strong>Tip #6:</strong> Socializa en las mesas de carrera. El apoyo social reduce el estrés.
+      </div>
+    </div>
+  </div>
+
+  <!-- RECURSOS DE APOYO -->
+  <h3 class="text-center mb-4"><i class="fas fa-toolbox"></i> Recursos de Apoyo</h3>
+  <div class="row mb-5">
+    <div class="col-md-3">
+      <div class="recurso-card" onclick="abrirRecurso('psicologia')">
+        <i class="fas fa-user-md fa-3x text-success"></i>
+        <h6 class="mt-2">Consultorio Psicológico</h6>
+        <small>Atención gratuita</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="recurso-card" onclick="abrirRecurso('linea')">
+        <i class="fas fa-phone-alt fa-3x text-primary"></i>
+        <h6 class="mt-2">Línea de Ayuda</h6>
+        <small>0800-12345</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="recurso-card" onclick="abrirRecurso('taller')">
+        <i class="fas fa-chalkboard-user fa-3x text-warning"></i>
+        <h6 class="mt-2">Talleres de Manejo de Estrés</h6>
+        <small>Inscripciones abiertas</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="recurso-card" onclick="abrirRecurso('grupo')">
+        <i class="fas fa-hand-holding-heart fa-3x text-danger"></i>
+        <h6 class="mt-2">Grupos de Apoyo</h6>
+        <small>Martes y Jueves 4pm</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- RUTINA DE BIENESTAR DIARIA -->
+  <div class="card shadow-lg mb-5">
+    <div class="card-header bg-success text-white">
+      <h3><i class="fas fa-calendar-check"></i> Tu Rutina de Bienestar Diaria</h3>
+    </div>
+    <div class="card-body">
+      <div id="rutinaContainer"></div>
+      <button class="btn btn-success mt-3 w-100" onclick="completarRutina()">
+        <i class="fas fa-check-circle"></i> Completé mi rutina hoy (+30 puntos)
+      </button>
+    </div>
+  </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Inicializar gráficos
-  const ctx1 = document.getElementById('estresChart').getContext('2d');
-  new Chart(ctx1, {
-    type: 'doughnut',
-    data: { labels: ['Estrés severo', 'Estrés moderado', 'Sin estrés'], datasets: [{ data: [80, 15, 5], backgroundColor: ['#dc3545', '#ffc107', '#28a745'] }] }
-  });
-  
-  const ctx2 = document.getElementById('apuestasChart').getContext('2d');
-  new Chart(ctx2, {
+  // ========== ANIMACIÓN DE CONTADORES ==========
+  function animarContadores() {
+    const counters = document.querySelectorAll('.stat-number-animated');
+    counters.forEach(counter => {
+      const target = parseInt(counter.getAttribute('data-target'));
+      let current = 0;
+      const increment = target / 50;
+      const updateCounter = () => {
+        if(current < target) {
+          current += increment;
+          counter.innerText = Math.ceil(current) + '%';
+          setTimeout(updateCounter, 30);
+        } else {
+          counter.innerText = target + '%';
+        }
+      };
+      updateCounter();
+    });
+  }
+
+  // ========== GRÁFICOS AVANZADOS ==========
+  const ctxCausas = document.getElementById('causasEstresChart').getContext('2d');
+  new Chart(ctxCausas, {
     type: 'bar',
-    data: { labels: ['Expuestos a apuestas', 'Sin exposición'], datasets: [{ label: 'Porcentaje', data: [40, 60], backgroundColor: '#dc3545' }] }
+    data: {
+      labels: ['Sobrecarga académica', 'Presión social', 'Problemas económicos', 'Futuro laboral', 'Apuestas online'],
+      datasets: [{
+        label: 'Porcentaje de estudiantes afectados',
+        data: [85, 72, 68, 79, 40],
+        backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#20c997', '#6f42c1']
+      }]
+    }
   });
+
+  const ctxEvolucion = document.getElementById('evolucionBienestarChart').getContext('2d');
+  new Chart(ctxEvolucion, {
+    type: 'line',
+    data: {
+      labels: ['2024', '2025', '2026 (Proyectado)'],
+      datasets: [
+        { label: 'Bienestar general', data: [55, 68, 82], borderColor: '#2d6a4f', tension: 0.4 },
+        { label: 'Satisfacción estudiantil', data: [48, 71, 85], borderColor: '#ffc107', tension: 0.4 }
+      ]
+    }
+  });
+
+  // ========== TEST DE ESTRÉS ==========
+  const preguntas = [
+    "¿Con qué frecuencia te sientes abrumado por tus tareas?",
+    "¿Tienes dificultades para conciliar el sueño por preocupaciones?",
+    "¿Has pensado en apostar online para resolver problemas económicos?",
+    "¿Te cuesta concentrarte en clases?",
+    "¿Sientes que no tienes tiempo para ti mismo?"
+  ];
   
-  // Inicializar contadores desde localStorage
-  function inicializarContadores() {
-    if (!localStorage.getItem('conexionesSociales')) localStorage.setItem('conexionesSociales', '0');
-    if (!localStorage.getItem('comprasMercadito')) localStorage.setItem('comprasMercadito', '0');
-    if (!localStorage.getItem('diasRouterIoT')) localStorage.setItem('diasRouterIoT', '0');
-    if (!localStorage.getItem('misionesVerdes')) localStorage.setItem('misionesVerdes', '0');
-    
-    actualizarTodosLosLogros();
+  const opciones = ["Nunca", "Rara vez", "A veces", "Frecuentemente", "Siempre"];
+  
+  function cargarTest() {
+    const container = document.getElementById('testPreguntas');
+    container.innerHTML = preguntas.map((p, i) => `
+      <div class="mb-3">
+        <label class="form-label">${i+1}. ${p}</label>
+        <select id="respuesta${i}" class="form-select">
+          ${opciones.map((opt, idx) => `<option value="${idx}">${opt}</option>`).join('')}
+        </select>
+      </div>
+    `).join('');
   }
   
-  function actualizarTodosLosLogros() {
-    // Eco Amigable (basado en misiones verdes - se sincroniza con index.html)
-    const misionesVerdes = parseInt(localStorage.getItem('misionesVerdes') || '0');
-    const ecoProgress = (misionesVerdes / 5) * 100;
-    document.querySelector('[data-logro="eco"] .progress-bar').style.width = Math.min(ecoProgress, 100) + '%';
-    document.getElementById('eco-contador').textContent = `${misionesVerdes}/5`;
-    
-    if (misionesVerdes >= 5 && !localStorage.getItem('logro_eco_desbloqueado')) {
-      localStorage.setItem('logro_eco_desbloqueado', 'true');
-      document.querySelector('[data-logro="eco"]').classList.add('border-success', 'shadow-lg');
-      Swal.fire({
-        title: '🏆 ¡Logro desbloqueado!',
-        text: 'Has obtenido el título "Eco Amigable"',
-        icon: 'success',
-        confirmButtonColor: '#28a745'
-      });
+  function calcularNivelEstres() {
+    let total = 0;
+    for(let i = 0; i < 5; i++) {
+      total += parseInt(document.getElementById(`respuesta${i}`).value);
     }
+    const nivel = (total / 20) * 100;
+    let mensaje, color;
+    if(nivel < 30) { mensaje = "¡Excelente! Manejas bien el estrés. Sigue así."; color = "#28a745"; }
+    else if(nivel < 60) { mensaje = "Estrés moderado. Aplica los tips de bienestar."; color = "#ffc107"; }
+    else { mensaje = "Estrés severo. Te recomendamos buscar apoyo psicológico."; color = "#dc3545"; }
     
-    // Socializador
-    const conexiones = parseInt(localStorage.getItem('conexionesSociales') || '0');
-    const socialProgress = (conexiones / 10) * 100;
-    document.querySelector('[data-logro="social"] .progress-bar').style.width = Math.min(socialProgress, 100) + '%';
-    document.getElementById('social-contador').textContent = `${conexiones}/10`;
-    
-    if (conexiones >= 10 && !localStorage.getItem('logro_social_desbloqueado')) {
-      localStorage.setItem('logro_social_desbloqueado', 'true');
-      document.querySelector('[data-logro="social"]').classList.add('border-primary', 'shadow-lg');
+    document.getElementById('resultadoTest').style.display = 'block';
+    document.getElementById('resultadoTest').innerHTML = `
+      <div class="alert" style="background: ${color}; color: white;">
+        <strong>Tu nivel de estrés: ${Math.round(nivel)}%</strong><br>
+        ${mensaje}<br>
+        <button class="btn btn-light mt-2" onclick="recomendarAyuda()">📞 Pedir ayuda</button>
+      </div>
+    `;
+  }
+  
+  function recomendarAyuda() {
+    Swal.fire({
+      title: '📞 Línea de Ayuda',
+      text: '0800-12345 (Disponible 24/7)\nTambién puedes acercarte al consultorio psicológico del campus.',
+      icon: 'info',
+      confirmButtonText: 'Entendido'
+    });
+  }
+  
+  // ========== MEDITACIONES ==========
+  function reproducirMeditacion(tipo) {
+    let audio;
+    if(tipo === 'ansiedad') {
+      audio = document.getElementById('audioAnsiedad');
+      audio.play();
       Swal.fire({
-        title: '🏆 ¡Logro desbloqueado!',
-        text: 'Has obtenido el título "Socializador"',
+        title: '🎧 Meditación Iniciada',
+        text: 'Respira profundo y relájate. Sonará música de fondo.',
         icon: 'success',
-        confirmButtonColor: '#0d6efd'
+        timer: 2000,
+        showConfirmButton: false
       });
-    }
-    
-    // Apoyo Local
-    const compras = parseInt(localStorage.getItem('comprasMercadito') || '0');
-    const emprendedorProgress = (compras / 3) * 100;
-    document.querySelector('[data-logro="emprendedor"] .progress-bar').style.width = Math.min(emprendedorProgress, 100) + '%';
-    document.getElementById('emprendedor-contador').textContent = `${compras}/3`;
-    
-    if (compras >= 3 && !localStorage.getItem('logro_emprendedor_desbloqueado')) {
-      localStorage.setItem('logro_emprendedor_desbloqueado', 'true');
-      document.querySelector('[data-logro="emprendedor"]').classList.add('border-warning', 'shadow-lg');
+    } else {
       Swal.fire({
-        title: '🏆 ¡Logro desbloqueado!',
-        text: 'Has obtenido el título "Apoyo Local"',
-        icon: 'success',
-        confirmButtonColor: '#ffc107'
-      });
-    }
-    
-    // Tech Saver
-    const diasRouter = parseInt(localStorage.getItem('diasRouterIoT') || '0');
-    const techProgress = (diasRouter / 30) * 100;
-    document.querySelector('[data-logro="tecnologico"] .progress-bar').style.width = Math.min(techProgress, 100) + '%';
-    document.getElementById('tecnologico-contador').textContent = `${diasRouter}/30`;
-    
-    if (diasRouter >= 30 && !localStorage.getItem('logro_tecnologico_desbloqueado')) {
-      localStorage.setItem('logro_tecnologico_desbloqueado', 'true');
-      document.querySelector('[data-logro="tecnologico"]').classList.add('border-info', 'shadow-lg');
-      Swal.fire({
-        title: '🏆 ¡Logro desbloqueado!',
-        text: 'Has obtenido el título "Tech Saver"',
-        icon: 'success',
-        confirmButtonColor: '#0dcaf0'
+        title: '🎧 Meditación Guiada',
+        html: `<p>Siéntate cómodamente, cierra los ojos y respira...</p>
+               <audio controls autoplay>
+                 <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-${tipo === 'concentracion' ? '3' : '1'}.mp3" type="audio/mpeg">
+               </audio>`,
+        width: '500px'
       });
     }
   }
   
-  function simularPulsera() {
+  // ========== TIPS ==========
+  function aplicarTip(numero) {
+    const puntosGanados = 5;
     let puntos = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
-    puntos += 10;
+    puntos += puntosGanados;
     localStorage.setItem('puntosUsuario', puntos);
     
-    let conexiones = parseInt(localStorage.getItem('conexionesSociales') || '0');
-    conexiones++;
-    localStorage.setItem('conexionesSociales', conexiones);
-    
-    actualizarTodosLosLogros();
-    
     Swal.fire({
-      title: '¡Conexión exitosa!',
-      text: `Ganaste 10 puntos por interactuar con otra facultad. Conexiones totales: ${conexiones}/10`,
+      title: '✨ +5 puntos',
+      text: 'Has aplicado un tip de bienestar. ¡Sigue así!',
       icon: 'success',
-      confirmButtonColor: '#4ECDC4'
+      timer: 1500,
+      showConfirmButton: false
     });
+    if(window.actualizarPuntosHeader) window.actualizarPuntosHeader();
   }
   
-  function simularConexionSocial() {
-    let conexiones = parseInt(localStorage.getItem('conexionesSociales') || '0');
-    conexiones++;
-    localStorage.setItem('conexionesSociales', conexiones);
-    
-    actualizarTodosLosLogros();
-    
+  // ========== RECURSOS ==========
+  function abrirRecurso(tipo) {
+    const recursos = {
+      psicologia: "Consultorio Psicológico\nHorario: L-V 8am-6pm\nUbicación: Primer piso - Edificio A",
+      linea: "Línea de Ayuda: 0800-12345\nWhatsApp: 984 123 456",
+      taller: "Próximo taller: 'Manejo del Estrés'\nFecha: 25 de Junio\nInscríbete en bienestar@continental.edu.pe",
+      grupo: "Grupos de Apoyo\nMartes y Jueves de 4pm a 5pm\n Primer piso - Oficinas de Psicología"
+    };
     Swal.fire({
-      title: '🤝 Nueva conexión',
-      text: `Has conectado con un estudiante de otra facultad. Conexiones totales: ${conexiones}/10`,
+      title: '📋 Información',
+      text: recursos[tipo],
       icon: 'info',
-      confirmButtonColor: '#0d6efd'
+      confirmButtonColor: '#2d6a4f'
     });
   }
   
-  function simularCompraMercadito() {
-    let compras = parseInt(localStorage.getItem('comprasMercadito') || '0');
-    compras++;
-    localStorage.setItem('comprasMercadito', compras);
+  // ========== RUTINA DIARIA ==========
+  const actividadesRutina = [
+    { icono: "🌅", texto: "Meditar 5 minutos al despertar", completado: false },
+    { icono: "💧", texto: "Tomar 2 litros de agua", completado: false },
+    { icono: "🚶", texto: "Caminar 15 minutos", completado: false },
+    { icono: "📚", texto: "Estudiar con pausas activas", completado: false },
+    { icono: "😴", texto: "Dormir 7-8 horas", completado: false }
+  ];
+  
+  function cargarRutina() {
+    const container = document.getElementById('rutinaContainer');
+    container.innerHTML = actividadesRutina.map((act, i) => `
+      <div class="rutina-dia">
+        <input type="checkbox" id="rutina${i}" onchange="guardarRutina()">
+        <span>${act.icono} ${act.texto}</span>
+      </div>
+    `).join('');
     
-    let puntos = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
-    puntos += 5;
-    localStorage.setItem('puntosUsuario', puntos);
-    
-    actualizarTodosLosLogros();
-    
-    Swal.fire({
-      title: '🛍️ ¡Compra realizada!',
-      text: `Apoyaste el emprendimiento local. Compras totales: ${compras}/3. +5 puntos`,
-      icon: 'success',
-      confirmButtonColor: '#ffc107'
+    // Cargar estado guardado
+    const saved = JSON.parse(localStorage.getItem('rutinaDiaria')) || [];
+    saved.forEach((completado, i) => {
+      const checkbox = document.getElementById(`rutina${i}`);
+      if(checkbox) checkbox.checked = completado;
     });
   }
   
-  function simularUsoRouter() {
-    let diasRouter = parseInt(localStorage.getItem('diasRouterIoT') || '0');
-    diasRouter++;
-    localStorage.setItem('diasRouterIoT', diasRouter);
+  function guardarRutina() {
+    const completadas = [];
+    for(let i = 0; i < actividadesRutina.length; i++) {
+      const checkbox = document.getElementById(`rutina${i}`);
+      completadas.push(checkbox ? checkbox.checked : false);
+    }
+    localStorage.setItem('rutinaDiaria', JSON.stringify(completadas));
+  }
+  
+  function completarRutina() {
+    const completadas = [];
+    for(let i = 0; i < actividadesRutina.length; i++) {
+      const checkbox = document.getElementById(`rutina${i}`);
+      completadas.push(checkbox ? checkbox.checked : false);
+    }
+    const todasCompletas = completadas.every(c => c === true);
     
-    actualizarTodosLosLogros();
-    
+    if(todasCompletas) {
+      let puntos = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+      puntos += 30;
+      localStorage.setItem('puntosUsuario', puntos);
+      Swal.fire({
+        title: '🎉 ¡Rutina completada!',
+        text: 'Ganaste 30 puntos por cuidar tu bienestar',
+        icon: 'success',
+        confirmButtonColor: '#2d6a4f'
+      });
+      if(window.actualizarPuntosHeader) window.actualizarPuntosHeader();
+    } else {
+      Swal.fire('⚠️ Incompleto', 'Completa todas las actividades primero', 'warning');
+    }
+  }
+  
+  // ========== MOSTRAR DETALLES ==========
+  function mostrarDetalle(tipo) {
+    const detalles = {
+      estres: "El 80% de estudiantes reporta estrés debido a: sobrecarga académica (85%), presión social (72%) y preocupación por el futuro (79%).",
+      concentracion: "El 91% tiene dificultades de concentración. Principales causas: uso excesivo de redes sociales y falta de sueño.",
+      apuestas: "El 40% ha estado expuesto a apuestas online. Nuestro router IoT ha bloqueado más de 5,000 intentos.",
+      ansiedad: "El 73% sufre ansiedad moderada. Los grupos de apoyo han ayudado a reducir estos índices."
+    };
     Swal.fire({
-      title: '🛡️ Router IoT activo',
-      text: `Has usado el filtro de apuestas por ${diasRouter} día(s). Meta: 30 días`,
+      title: '📊 Información Detallada',
+      text: detalles[tipo],
       icon: 'info',
-      confirmButtonColor: '#0dcaf0'
+      confirmButtonColor: '#2d6a4f'
     });
   }
   
-  // Esta función permite sincronizar misiones verdes desde index.html
-  function actualizarMisionesVerdes(cantidad) {
-    localStorage.setItem('misionesVerdes', cantidad);
-    actualizarTodosLosLogros();
-  }
+  // ========== CITAS MOTIVACIONALES ==========
+  const citas = [
+    "El estrés no viene de los hechos, sino de cómo los interpretas",
+    "Cuida tu mente, es el único lugar donde realmente vives",
+    "No puedes cambiar el viento, pero sí ajustar las velas",
+    "La salud mental no es un destino, es un proceso continuo",
+    "Tómate un momento para respirar, el mundo puede esperar"
+  ];
   
-  // Inicializar al cargar la página
-  document.addEventListener('DOMContentLoaded', function() {
-    inicializarContadores();
+  let citaIndex = 0;
+  function cambiarCita() {
+    const citaElement = document.getElementById('citaTexto');
+    if(citaElement) {
+      citaIndex = (citaIndex + 1) % citas.length;
+      citaElement.textContent = citas[citaIndex];
+    }
+  }
+  setInterval(cambiarCita, 8000);
+  
+  // ========== INICIALIZAR TODO ==========
+  document.addEventListener('DOMContentLoaded', () => {
+    animarContadores();
+    cargarTest();
+    cargarRutina();
   });
 </script>
 </body>
