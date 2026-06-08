@@ -49,6 +49,7 @@
         <li class="nav-item"><a class="nav-link" href="bienestar.html">🧠 Bienestar</a></li>
         <li class="nav-item"><a class="nav-link" href="ranking.html">🏆 Ranking</a></li>
         <li class="nav-item"><a class="nav-link" href="chat.html">💬 Chat Vivo</a></li>
+        <li class="nav-item"><a class="nav-link" href="juego.html">🎮 Juego</a></li>
         <li class="nav-item"><a class="nav-link" href="equipo.html">👥 Equipo</a></li>
       </ul>
       <span class="badge bg-success ms-3" id="puntosHeader">⭐ 0 pts</span>
@@ -298,6 +299,31 @@
       <p class="text-muted">Sigue participando en iniciativas sostenibles para desbloquear más insignias 🌟</p>
     </div>
   </div>
+  <div class="mt-3">
+  <label>Nivel <span id="nivelUsuario">1</span> → <span id="siguienteNivel">2</span></label>
+  <div class="progress">
+    <div id="barraNivel" class="progress-bar bg-success" style="width: 0%"></div>
+  </div>
+  <small id="puntosFaltantes"></small>
+</div>
+
+<script>
+  function actualizarNivel() {
+    const puntos = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+    const nivel = Math.floor(puntos / 500) + 1;
+    const siguiente = (nivel * 500);
+    const progreso = (puntos % 500) / 5;
+    
+    document.getElementById('nivelUsuario').textContent = nivel;
+    document.getElementById('siguienteNivel').textContent = nivel + 1;
+    document.getElementById('barraNivel').style.width = `${progreso}%`;
+    document.getElementById('puntosFaltantes').textContent = `Te faltan ${siguiente - puntos} puntos para el siguiente nivel`;
+  }
+  
+  // Llamar cada vez que cambien puntos
+  setInterval(actualizarNivel, 1000);
+  actualizarNivel();
+</script>
   <div class="text-center mt-4">
   <button class="btn btn-outline-success" onclick="generarQRPerfil()">
     <i class="fas fa-qrcode"></i> Compartir mi perfil
@@ -368,6 +394,53 @@
     <!-- Se cargan con JS -->
   </div>
 </section>
+
+<!-- PRÓXIMO EVENTO EN VIVO -->
+<div class="container mb-4">
+  <div class="card bg-danger text-white text-center">
+    <div class="card-body">
+      <h4><i class="fas fa-clock"></i> Próximo Evento en Vivo</h4>
+      <h2 id="timerEvento">00:00:00</h2>
+      <p style="color: #000000;">🌱 Plantación de árboles - Viernes 15:00 hrs</p>
+      <button class="btn btn-light" style="background-color: #009c2f; color: white;" onclick="recordarmeEvento()">📅 Recordarme</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Timer cuenta regresiva
+  function iniciarTimer() {
+    const eventoFecha = new Date();
+    eventoFecha.setDate(eventoFecha.getDate() + 3);
+    eventoFecha.setHours(15, 0, 0, 0);
+    
+    const timerElement = document.getElementById('timerEvento');
+    if(!timerElement) return;
+    
+    const interval = setInterval(() => {
+      const ahora = new Date();
+      const distancia = eventoFecha - ahora;
+      
+      if(distancia < 0) {
+        clearInterval(interval);
+        timerElement.textContent = "¡YA ESTÁ EN VIVO!";
+        return;
+      }
+      
+      const horas = Math.floor(distancia / (1000 * 60 * 60));
+      const minutos = Math.floor((distancia % (3600000)) / 60000);
+      const segundos = Math.floor((distancia % 60000) / 1000);
+      
+      timerElement.textContent = `${horas.toString().padStart(2,'0')}:${minutos.toString().padStart(2,'0')}:${segundos.toString().padStart(2,'0')}`;
+    }, 1000);
+  }
+  
+  function recordarmeEvento() {
+    Swal.fire('📅 Recordatorio guardado', 'Te avisaremos 1 hora antes', 'success');
+  }
+  
+  iniciarTimer();
+</script>
 
 <script>
   const misionesDiarias = [

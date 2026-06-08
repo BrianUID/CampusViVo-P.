@@ -415,3 +415,121 @@ window.sumarPuntos = function(cantidad) {
   if(originalSumarPuntos) originalSumarPuntos(cantidad);
   checkLogroEspecial();
 };
+
+// ========== PANEL ADMIN MEJORADO ==========
+let adminSequence = [];
+const adminCode = ['a', 'd', 'm', 'i', 'n'];
+let adminMode = false;
+
+document.addEventListener('keydown', (e) => {
+  const key = e.key.toLowerCase();
+  adminSequence.push(key);
+  if (adminSequence.length > 5) adminSequence.shift();
+  
+  console.log('Secuencia:', adminSequence); // Para depurar
+  
+  if (JSON.stringify(adminSequence) === JSON.stringify(adminCode)) {
+    console.log('✅ Panel Admin Activado');
+    mostrarPanelAdmin();
+    adminSequence = [];
+  }
+});
+
+function mostrarPanelAdmin() {
+  Swal.fire({
+    title: '🔒 PANEL DE ADMINISTRACIÓN',
+    html: `
+      <div class="text-start">
+        <div class="mb-3 p-2" style="background: #f8f9fa; border-radius: 10px;">
+          <strong>📊 ESTADÍSTICAS RÁPIDAS</strong><br>
+          Usuario actual: ${localStorage.getItem('usuario') || 'No logueado'}<br>
+          Puntos: ${localStorage.getItem('puntosUsuario') || 100}<br>
+          Modo oscuro: ${localStorage.getItem('darkMode') === 'enabled' ? 'Activado' : 'Desactivado'}
+        </div>
+        
+        <div class="mb-2">
+          <button class="btn btn-danger w-100 mb-2" onclick="adminResetPuntos()">
+            🔄 Resetear mis puntos
+          </button>
+          <button class="btn btn-warning w-100 mb-2" onclick="adminAddPuntos()">
+            ➕ Añadir 500 puntos
+          </button>
+          <button class="btn btn-info w-100 mb-2" onclick="adminSimularUsuario()">
+            🎭 Cambiar de usuario
+          </button>
+          <button class="btn btn-success w-100 mb-2" onclick="adminLimpiarCache()">
+            🧹 Limpiar caché local
+          </button>
+          <button class="btn btn-dark w-100" onclick="adminVerTodo()">
+            👁️ Ver todos los datos guardados
+          </button>
+        </div>
+      </div>
+    `,
+    width: '450px',
+    showConfirmButton: false,
+    showCloseButton: true,
+    backdrop: true
+  });
+}
+
+function adminResetPuntos() {
+  localStorage.setItem('puntosUsuario', '100');
+  Swal.fire('✅ Reset completo', 'Tus puntos han vuelto a 100', 'success');
+  location.reload();
+}
+
+function adminAddPuntos() {
+  let puntos = parseInt(localStorage.getItem('puntosUsuario') || '100');
+  puntos += 500;
+  localStorage.setItem('puntosUsuario', puntos);
+  Swal.fire('🎉 +500 puntos', `Ahora tienes ${puntos} puntos`, 'success');
+  if(window.actualizarPuntosHeader) actualizarPuntosHeader();
+}
+
+function adminSimularUsuario() {
+  Swal.fire({
+    title: '👤 Simular usuario',
+    input: 'text',
+    inputPlaceholder: 'Nombre del usuario',
+    showCancelButton: true,
+    confirmButtonText: 'Simular'
+  }).then(result => {
+    if(result.isConfirmed && result.value) {
+      localStorage.setItem('usuario', result.value);
+      localStorage.setItem('puntosUsuario', '250');
+      Swal.fire(`✅ Ahora eres ${result.value} con 250 puntos`, '', 'success');
+      location.reload();
+    }
+  });
+}
+
+function adminLimpiarCache() {
+  Swal.fire({
+    title: '⚠️ ¿Limpiar caché?',
+    text: 'Esto borrará tus datos locales',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, limpiar'
+  }).then(result => {
+    if(result.isConfirmed) {
+      localStorage.clear();
+      Swal.fire('🧹 Caché limpiado', 'Recarga la página', 'success');
+      location.reload();
+    }
+  });
+}
+
+function adminVerTodo() {
+  let datos = '';
+  for(let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    datos += `${key}: ${localStorage.getItem(key)}\n`;
+  }
+  Swal.fire({
+    title: '📦 Datos guardados',
+    text: datos || 'No hay datos guardados',
+    icon: 'info',
+    width: '500px'
+  });
+}

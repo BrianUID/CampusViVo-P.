@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego - Reciclaje Rápido</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .game-container { text-align: center; padding: 20px; }
+    .residuo { font-size: 4rem; cursor: pointer; transition: transform 0.2s; display: inline-block; margin: 10px; }
+    .residuo:hover { transform: scale(1.1); }
+    .puntaje { font-size: 2rem; font-weight: bold; }
+    .tiempo { font-size: 1.5rem; color: red; }
+  </style>
+</head>
+<body class="bg-light">
+<div class="container py-5">
+  <div class="card shadow-lg">
+    <div class="card-header bg-success text-white text-center">
+      <h2>♻️ Reciclaje Rápido</h2>
+    </div>
+    <div class="card-body game-container">
+      <div class="row mb-4">
+        <div class="col-6">
+          <div class="puntaje">⭐ <span id="puntosJuego">0</span></div>
+        </div>
+        <div class="col-6">
+          <div class="tiempo">⏱️ <span id="tiempoJuego">30</span>s</div>
+        </div>
+      </div>
+      
+      <div id="preguntaContainer" class="mb-4">
+        <h3 id="textoPregunta">¿Dónde va esto?</h3>
+        <div id="residuosContainer"></div>
+      </div>
+      
+      <div class="row mt-4">
+        <div class="col-6">
+          <button class="btn btn-danger w-100" onclick="responder('organico')">🗑️ Orgánico</button>
+        </div>
+        <div class="col-6">
+          <button class="btn btn-primary w-100" onclick="responder('reciclable')">♻️ Reciclable</button>
+        </div>
+      </div>
+      
+      <button class="btn btn-success mt-3 w-100" onclick="iniciarJuego()">🔄 Reiniciar Juego</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  let puntosJuego = 0;
+  let tiempoRestante = 30;
+  let juegoActivo = false;
+  let timerInterval;
+  
+  const residuos = [
+    { nombre: "🍌 Cáscara de banana", tipo: "organico" },
+    { nombre: "🥤 Botella de plástico", tipo: "reciclable" },
+    { nombre: "🍎 Manzana podrida", tipo: "organico" },
+    { nombre: "📦 Caja de cartón", tipo: "reciclable" },
+    { nombre: "☕ Restos de café", tipo: "organico" },
+    { nombre: "🥫 Lata de aluminio", tipo: "reciclable" }
+  ];
+  
+  let residuoActual = null;
+  
+  function mostrarNuevoResiduo() {
+    residuoActual = residuos[Math.floor(Math.random() * residuos.length)];
+    document.getElementById('textoPregunta').innerHTML = `¿Dónde va esto?<br><span class="display-4">${residuoActual.nombre}</span>`;
+  }
+  
+  function responder(tipo) {
+    if(!juegoActivo) {
+      Swal.fire('Juego inactivo', 'Presiona "Reiniciar Juego" para comenzar', 'warning');
+      return;
+    }
+    
+    if(tipo === residuoActual.tipo) {
+      puntosJuego += 10;
+      document.getElementById('puntosJuego').textContent = puntosJuego;
+      Swal.fire({ title: '✅ ¡Correcto!', text: '+10 puntos', icon: 'success', timer: 500, showConfirmButton: false });
+      mostrarNuevoResiduo();
+    } else {
+      puntosJuego = Math.max(0, puntosJuego - 5);
+      document.getElementById('puntosJuego').textContent = puntosJuego;
+      Swal.fire({ title: '❌ Incorrecto', text: '-5 puntos', icon: 'error', timer: 500, showConfirmButton: false });
+    }
+  }
+  
+  function iniciarJuego() {
+    if(timerInterval) clearInterval(timerInterval);
+    puntosJuego = 0;
+    tiempoRestante = 30;
+    juegoActivo = true;
+    document.getElementById('puntosJuego').textContent = '0';
+    document.getElementById('tiempoJuego').textContent = '30';
+    mostrarNuevoResiduo();
+    
+    timerInterval = setInterval(() => {
+      if(tiempoRestante <= 1) {
+        clearInterval(timerInterval);
+        juegoActivo = false;
+        const puntosFinales = puntosJuego;
+        let puntosReales = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+        puntosReales += puntosFinales;
+        localStorage.setItem('puntosUsuario', puntosReales);
+        
+        Swal.fire({
+          title: '🏆 ¡Juego terminado!',
+          html: `Ganaste ${puntosFinales} puntos<br>Total: ${puntosReales} puntos`,
+          icon: 'success'
+        });
+        if(window.actualizarPuntosHeader) window.actualizarPuntosHeader();
+      } else {
+        tiempoRestante--;
+        document.getElementById('tiempoJuego').textContent = tiempoRestante;
+      }
+    }, 1000);
+  }
+  
+  // Iniciar automático al cargar
+  iniciarJuego();
+</script>
+</body>
+</html>

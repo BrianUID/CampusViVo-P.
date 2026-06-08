@@ -120,6 +120,56 @@
     </div>
   </div>
 
+  <!-- RÉCORDS MUNDIALES -->
+<div class="card mt-4 bg-dark text-white">
+  <div class="card-header bg-warning text-dark">
+    <h4 class="mb-0"><i class="fas fa-globe"></i> Récords Mundiales CampusVivo</h4>
+  </div>
+  <div class="card-body">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <i class="fas fa-trophy fa-3x text-warning"></i>
+        <h3 id="recordPuntos">3,250</h3>
+        <p>Más puntos acumulados</p>
+        <small>María Fernández - Negocios</small>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-check-circle fa-3x text-success"></i>
+        <h3 id="recordMisiones">47</h3>
+        <p>Misiones completadas</p>
+        <small>Carlos Quispe - Sistemas</small>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-store fa-3x text-info"></i>
+        <h3 id="recordCompras">23</h3>
+        <p>Compras en mercadito</p>
+        <small>Ana Lucía - Arquitectura</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Animación de récords
+  function animarRecord(elementId, valorFinal) {
+    let current = 0;
+    const element = document.getElementById(elementId);
+    const interval = setInterval(() => {
+      if(current >= valorFinal) {
+        clearInterval(interval);
+        element.textContent = valorFinal.toLocaleString();
+      } else {
+        current += Math.ceil(valorFinal / 50);
+        element.textContent = current.toLocaleString();
+      }
+    }, 30);
+  }
+  
+  animarRecord('recordPuntos', 3250);
+  animarRecord('recordMisiones', 47);
+  animarRecord('recordCompras', 23);
+</script>
+
   <!-- CÓMO GANAR PUNTOS -->
   <div class="row mt-5">
     <div class="col-md-6">
