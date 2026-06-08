@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mercadito - CampusVivo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    .product-card { transition: transform 0.3s; cursor: pointer; }
+    .product-card:hover { transform: translateY(-10px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .precio-puntos { background: #ffd700; color: #333; padding: 5px 10px; border-radius: 20px; font-weight: bold; }
+    .filtro-btn { margin: 5px; padding: 8px 20px; border-radius: 25px; transition: all 0.3s; }
+    .filtro-btn.active { background: #2d6a4f; color: white; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">🌿 CampusVivo</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">🏠 Inicio</a></li>
+        <li class="nav-item"><a class="nav-link active" href="mercadito.html">🍫 Mercadito</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#zona-smart">🛡️ Zona Smart</a></li>
+        <li class="nav-item"><a class="nav-link" href="bienestar.html">🧠 Bienestar</a></li>
+        <li class="nav-item"><a class="nav-link" href="equipo.html">👥 Equipo</a></li>
+      </ul>
+      <span class="badge bg-success ms-3" id="puntosHeader">⭐ 0 pts</span>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <h1 class="display-4"><i class="fas fa-store text-success"></i> El Mercadito Estudiantil</h1>
+    <p class="lead">Apoya el talento local - Compra con Soles o Puntos de Bienestar</p>
+  </div>
+
+  <!-- Filtros -->
+  <div class="row mb-4">
+    <div class="col-md-6 mx-auto">
+      <input type="text" id="buscador" class="form-control" placeholder="🔍 Buscar productos...">
+    </div>
+  </div>
+  <div class="text-center mb-4" id="filtros">
+    <button class="filtro-btn btn btn-outline-success active" data-categoria="todos">Todos</button>
+    <button class="filtro-btn btn btn-outline-success" data-categoria="snacks">🍫 Postres</button>
+    <button class="filtro-btn btn btn-outline-success" data-categoria="joyeria">💍 Joyería</button>
+    <button class="filtro-btn btn btn-outline-success" data-categoria="arte">🎨 Arte</button>
+    <button class="filtro-btn btn btn-outline-success" data-categoria="servicios">📚 Servicios</button>
+  </div>
+
+  <!-- Productos Grid -->
+  <div class="row g-4" id="productosGrid"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  let puntosUsuario = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+  document.getElementById('puntosHeader').innerHTML = `⭐ ${puntosUsuario} pts`;
+
+  const productos = [
+    { id:1, nombre:"Chocoteja Artesanal", categoria:"snacks", precioSoles:2.50, precioPuntos:50, imagen:"https://www.sorprendelima.pe/cdn/shop/products/lilchocolates_1_1200x1200.jpg?v=1675101161", emprendedor:"María Fernández", carrera:"Negocios", historia:"Receta familiar de 3 generaciones", whatsapp:"51987654321" },
+    { id:2, nombre:"Pulsera Andina", categoria:"joyeria", precioSoles:15, precioPuntos:300, imagen:"https://m.media-amazon.com/images/I/81NSfiAf9UL._AC_UY1000_.jpg", emprendedor:"Carlos Quispe", carrera:"Diseño", historia:"Artesano ayacuchano", whatsapp:"51912345678" },
+    { id:3, nombre:"Cuaderno Reciclado", categoria:"arte", precioSoles:12, precioPuntos:240, imagen:"https://i.pinimg.com/474x/c1/40/75/c1407591d792e6b1ea7742379a1cdee8.jpg", emprendedor:"Ana Lucía", carrera:"Arquitectura", historia:"Eco-friendly", whatsapp:"51988888888" },
+    { id:4, nombre:"Asesoría Matemáticas", categoria:"servicios", precioSoles:25, precioPuntos:500, imagen:"https://matetres14.com/wp-content/themes/matetres/img/linea.jpg", emprendedor:"Renzo Torres", carrera:"Ingeniería", historia:"Top 5 de la carrera", whatsapp:"51999999999" },
+    { id:5, nombre:"Chocoteja de Quinua", categoria:"snacks", precioSoles:3, precioPuntos:60, imagen:"https://scontent.fcuz2-1.fna.fbcdn.net/v/t1.6435-9/112505914_997961560642061_4807398120942196738_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1365&ctp=s2048x1365&_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=vTAYSb5LCkAQ7kNvwGMOfaY&_nc_oc=AdoqPYM0ruPhV73rvHWk-HtLH9iMxD5HGqx8xDTv8YqghfGIVQgFMNex2OlrseidCUmWLWbFxIPrAVIogkgS5AU7&_nc_zt=23&_nc_ht=scontent.fcuz2-1.fna&_nc_gid=YkbXwwk0fMsXvwe4YqLn8w&_nc_ss=7b2a8&oh=00_Af8dAA0gnJ55G7w3OlRwyOo30Gd6PMXkKg18OLKSTTVedA&oe=6A4DD7B7", emprendedor:"Sofía Rojas", carrera:"Nutrición", historia:"Superalimento andino", whatsapp:"51977777777" },
+    { id:6, nombre:"Aritos de Plata", categoria:"joyeria", precioSoles:25, precioPuntos:500, imagen:"https://dcdn-us.mitiendanube.com/stores/005/961/856/products/aretes-aros-rusticos-mate-coleccion-rustica10-8e19ef665b9dc5d92117545344518464-1024-1024.webp", emprendedor:"Mariela Sucso", carrera:"Artes Plásticas", historia:"Diseños únicos", whatsapp:"51966666666" }
+  ];
+
+  function mostrarProductos(categoria = 'todos', busqueda = '') {
+    const grid = document.getElementById('productosGrid');
+    const filtrados = productos.filter(p => (categoria === 'todos' || p.categoria === categoria) && p.nombre.toLowerCase().includes(busqueda.toLowerCase()));
+    
+    grid.innerHTML = filtrados.map(p => `
+      <div class="col-md-4">
+        <div class="card product-card h-100">
+          <img src="${p.imagen}" class="card-img-top" style="height:200px; object-fit:cover;" alt="${p.nombre}">
+          <div class="card-body">
+            <h5 class="card-title">${p.nombre}</h5>
+            <p class="text-muted small">👤 ${p.emprendedor} - ${p.carrera}</p>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="h5 mb-0">S/. ${p.precioSoles}</span>
+              <span class="precio-puntos">🎯 ${p.precioPuntos} pts</span>
+            </div>
+            <button class="btn btn-success w-100" onclick='verProducto(${JSON.stringify(p)})'>Ver más</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function verProducto(p) {
+    Swal.fire({
+      title: p.nombre,
+      html: `<img src="${p.imagen}" style="width:100%; border-radius:10px; margin-bottom:15px"><p><strong>✨ ${p.historia}</strong></p><p>👩‍🎓 ${p.emprendedor} (${p.carrera})</p><p>💰 S/. ${p.precioSoles} o ${p.precioPuntos} Puntos</p>`,
+      showCancelButton: true,
+      confirmButtonText: '🛒 Comprar con Soles',
+      cancelButtonText: '⭐ Comprar con Puntos'
+    }).then(result => {
+      if (result.isConfirmed) {
+        window.open(`https://wa.me/${p.whatsapp}?text=Hola%20${p.emprendedor}%2C%20quiero%20comprar%20${p.nombre}`, '_blank');
+        Swal.fire('¡Genial!', 'Redirigiendo a WhatsApp para coordinar', 'success');
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        if (puntosUsuario >= p.precioPuntos) {
+          puntosUsuario -= p.precioPuntos;
+          localStorage.setItem('puntosUsuario', puntosUsuario);
+          document.getElementById('puntosHeader').innerHTML = `⭐ ${puntosUsuario} pts`;
+          Swal.fire('¡Canjeado!', `Disfruta de ${p.nombre}. Te quedan ${puntosUsuario} puntos`, 'success');
+        } else {
+          Swal.fire('Sin puntos', `Te faltan ${p.precioPuntos - puntosUsuario} puntos. Completa misiones en el campus`, 'error');
+        }
+      }
+    });
+  }
+
+  document.getElementById('buscador').addEventListener('input', e => {
+    const cat = document.querySelector('.filtro-btn.active').dataset.categoria;
+    mostrarProductos(cat, e.target.value);
+  });
+  
+  document.querySelectorAll('.filtro-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      mostrarProductos(btn.dataset.categoria, document.getElementById('buscador').value);
+    });
+  });
+  
+  mostrarProductos();
+</script>
+</body>
+</html>

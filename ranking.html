@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking - CampusVivo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+    .rank-1 { background: linear-gradient(135deg, #ffd700, #ffed4e); color: #333; }
+    .rank-2 { background: linear-gradient(135deg, #c0c0c0, #e8e8e8); color: #333; }
+    .rank-3 { background: linear-gradient(135deg, #cd7f32, #e8a87c); color: #333; }
+    .medal-icon { font-size: 2rem; }
+    .podium-card { transition: transform 0.3s; cursor: pointer; }
+    .podium-card:hover { transform: translateY(-10px); }
+    .user-rank { background: #2d6a4f; color: white; padding: 15px; border-radius: 15px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">🌿 CampusVivo</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">🏠 Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="mercadito.html">🍫 Mercadito</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#zona-smart">🛡️ Zona Smart</a></li>
+        <li class="nav-item"><a class="nav-link" href="bienestar.html">🧠 Bienestar</a></li>
+        <li class="nav-item"><a class="nav-link" href="equipo.html">👥 Equipo</a></li>
+        <li class="nav-item"><a class="nav-link active" href="ranking.html">🏆 Ranking</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <h1 class="display-4"><i class="fas fa-trophy text-warning"></i> Ranking de Estudiantes</h1>
+    <p class="lead">¡Compite por ser el más sostenible del campus!</p>
+  </div>
+
+  <!-- PODIO TOP 3 -->
+  <div class="row g-4 mb-5 text-center">
+    <div class="col-md-3"></div>
+    <div class="col-md-3">
+      <div class="card podium-card rank-2 shadow-lg">
+        <div class="card-body">
+          <i class="fas fa-medal medal-icon text-secondary"></i>
+          <h2 class="mt-2">🥈 2do Lugar</h2>
+          <i class="fas fa-user-circle fa-4x"></i>
+          <h4 class="mt-2" id="rank2Name">Carlos Quispe</h4>
+          <p class="mb-0">Ingeniería de Sistemas</p>
+          <h3 class="text-success mt-2" id="rank2Pts">980 pts</h3>
+          <span class="badge bg-dark">🏆 4 logros</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card podium-card rank-1 shadow-lg scale-up">
+        <div class="card-body">
+          <i class="fas fa-crown medal-icon text-warning"></i>
+          <h2 class="mt-2">🥇 1er Lugar</h2>
+          <i class="fas fa-user-circle fa-5x text-warning"></i>
+          <h4 class="mt-2" id="rank1Name">María Fernández</h4>
+          <p class="mb-0">Negocios Internacionales</p>
+          <h3 class="text-success mt-2" id="rank1Pts">1250 pts</h3>
+          <span class="badge bg-warning">🏆 6 logros</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card podium-card rank-3 shadow-lg">
+        <div class="card-body">
+          <i class="fas fa-medal medal-icon text-danger"></i>
+          <h2 class="mt-2">🥉 3er Lugar</h2>
+          <i class="fas fa-user-circle fa-4x"></i>
+          <h4 class="mt-2" id="rank3Name">Ana Lucía</h4>
+          <p class="mb-0">Arquitectura</p>
+          <h3 class="text-success mt-2" id="rank3Pts">870 pts</h3>
+          <span class="badge bg-info">🏆 3 logros</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+
+  <!-- TABLA DE POSICIONES -->
+  <div class="card shadow-lg">
+    <div class="card-header bg-success text-white">
+      <h4 class="mb-0"><i class="fas fa-list"></i> Tabla de Posiciones</h4>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead class="table-dark">
+          <tr><th>#</th><th>Estudiante</th><th>Carrera</th><th>Puntos</th><th>Logros</th><th>Acción</th></tr>
+        </thead>
+        <tbody id="rankingBody">
+          <tr><td>1</td><td><i class="fas fa-crown text-warning"></i> María Fernández</td><td>Negocios</td><td>1250</td><td>🏆 6</td><td><button class="btn btn-sm btn-success" onclick="desafiar('María')">Desafiar</button></td></tr>
+          <tr><td>2</td><td><i class="fas fa-medal text-secondary"></i> Carlos Quispe</td><td>Ing. Sistemas</td><td>980</td><td>🏆 4</td><td><button class="btn btn-sm btn-success" onclick="desafiar('Carlos')">Desafiar</button></td></tr>
+          <tr><td>3</td><td><i class="fas fa-medal text-danger"></i> Ana Lucía</td><td>Arquitectura</td><td>870</td><td>🏆 3</td><td><button class="btn btn-sm btn-success" onclick="desafiar('Ana')">Desafiar</button></td></tr>
+          <tr><td>4</td><td>Renzo Torres</td><td>Ing. Civil</td><td>750</td><td>🏆 3</td><td><button class="btn btn-sm btn-outline-success" onclick="desafiar('Renzo')">Desafiar</button></td></tr>
+          <tr><td>5</td><td>Sofía Rojas</td><td>Nutrición</td><td>620</td><td>🏆 2</td><td><button class="btn btn-sm btn-outline-success" onclick="desafiar('Sofía')">Desafiar</button></td></tr>
+          <tr id="filaUsuarioActual" class="table-success">
+            <td id="userRank"></td>
+            <td><i class="fas fa-user"></i> <span id="userName">Tú</span></td>
+            <td id="userCarrera"></td>
+            <td id="userPoints"></td>
+            <td id="userLogros"></td>
+            <td><span class="badge bg-info">👤 Tú</span></td>
+          </tr>
+        </tbody>
+       </table>
+    </div>
+  </div>
+
+  <!-- CÓMO GANAR PUNTOS -->
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <div class="card bg-light">
+        <div class="card-body">
+          <h5><i class="fas fa-question-circle"></i> ¿Cómo ganar puntos?</h5>
+          <ul class="list-unstyled">
+            <li>✅ <strong>+50 pts</strong> - Completar todas las misiones</li>
+            <li>✅ <strong>+10 pts</strong> - Conectarte al Wi-Fi del lounge</li>
+            <li>✅ <strong>+20 pts</strong> - Comprar en el mercadito</li>
+            <li>✅ <strong>+15 pts</strong> - Usar transporte sostenible</li>
+            <li>✅ <strong>+5 pts</strong> - Compartir en redes sociales</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card bg-success text-white">
+        <div class="card-body text-center">
+          <h5><i class="fas fa-gift"></i> ¡Súbete en el ranking!</h5>
+          <p>Completa misiones y apoya emprendedores locales para ganar puntos y subir posiciones.</p>
+          <button class="btn btn-light" onclick="window.location.href='mercadito.html'">
+            🍫 Ir al Mercadito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Cargar datos del usuario actual
+  const userPuntos = localStorage.getItem('puntosUsuario') ? parseInt(localStorage.getItem('puntosUsuario')) : 100;
+  const userName = localStorage.getItem('usuario') || 'Estudiante';
+  const userEmail = localStorage.getItem('correo') || '';
+  
+  // Determinar carrera por correo (simulado)
+  let userCarrera = 'No especificada';
+  if(userEmail.includes('sistemas')) userCarrera = 'Ing. Sistemas';
+  else if(userEmail.includes('negocios')) userCarrera = 'Negocios';
+  else if(userEmail.includes('arquitectura')) userCarrera = 'Arquitectura';
+  else userCarrera = 'Universidad Continental';
+  
+  // Calcular posición del usuario
+  const puntosOtros = [1250, 980, 870, 750, 620];
+  let posicion = 1;
+  for(let p of puntosOtros) {
+    if(userPuntos < p) posicion++;
+  }
+  
+  // Actualizar fila del usuario
+  document.getElementById('userRank').innerText = posicion;
+  document.getElementById('userName').innerHTML = `<i class="fas fa-user"></i> ${userName}`;
+  document.getElementById('userCarrera').innerText = userCarrera;
+  document.getElementById('userPoints').innerHTML = `<strong>${userPuntos}</strong>`;
+  document.getElementById('userLogros').innerHTML = '🏆 ' + Math.floor(userPuntos / 200);
+  
+  function desafiar(nombre) {
+    Swal.fire({
+      title: `⚔️ Desafiar a ${nombre}`,
+      text: '¿Aceptas el desafío de ganar más puntos esta semana?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '¡Aceptar!',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if(result.isConfirmed) {
+        Swal.fire('¡Desafío enviado!', `Compite contra ${nombre} realizando más acciones sostenibles`, 'success');
+      }
+    });
+  }
+</script>
+</body>
+</html>
